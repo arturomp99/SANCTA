@@ -18,21 +18,26 @@ observer.plot();
 hold off
 
 %% Least Squares Filter
-figure;
-hold on
 lsFilter = LeastSquaresFilter(observer);
 [posEstimationHistory, biasEstimationHistory] = ...
     lsFilter.estimate(constellation.getSatsPos());
 stepsVec = 1:LeastSquaresFilter.maxIterations;
 
+figure;
+hold on
+
+longitude = atan2d(posEstimationHistory(2, :), posEstimationHistory(1, :));
+latitude = atan2d(posEstimationHistory(3, :), vecnorm(posEstimationHistory(1:2, :)));
+radius = vecnorm(posEstimationHistory);
+
 subplot(4, 1, 1)
-plot(stepsVec, posEstimationHistory(1, :))
+plot(stepsVec, longitude)
 
 subplot(4, 1, 2)
-plot(stepsVec, posEstimationHistory(2, :))
+plot(stepsVec, latitude)
 
 subplot(4, 1, 3)
-plot(stepsVec, posEstimationHistory(3, :))
+plot(stepsVec, radius)
 
 subplot(4, 1, 4)
 plot(stepsVec, biasEstimationHistory)
