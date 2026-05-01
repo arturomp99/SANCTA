@@ -6,17 +6,17 @@ classdef Observer
     end
 
     properties (Access = private)
+        lat;
+        lon;
         pos;
     end
 
     methods (Access = public)
 
         function obj = Observer(lat, lon)
-            obj.pos = Earth.radius * [
-                                      cos(lat) * cos(lon);
-                                      cos(lat) * sin(lon);
-                                      sin(lat)
-                                      ];
+            obj.lat = lat;
+            obj.lon = lon;
+            obj.pos = Coordinates.geografic2ecef(lat, lon, 0);
         end
 
         function plot(obj)
@@ -44,6 +44,18 @@ classdef Observer
 
         function observerPos = getPos(obj)
             observerPos = obj.pos;
+        end
+
+        function observerBias = getBias(obj)
+            observerBias = obj.bias;
+        end
+
+        function lat = getLat(obj)
+            lat = obj.lat;
+        end
+
+        function lon = getLon(obj)
+            lon = obj.lon;
         end
 
     end

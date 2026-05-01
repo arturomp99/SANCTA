@@ -2,6 +2,7 @@ classdef Satellite
 
     properties (Constant, Access = private)
         period = 12 * 3600; % s
+        signoise = 100; % desviación típica de las medidas de los satélites
     end
 
     properties (Access = private)

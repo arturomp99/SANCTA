@@ -98,6 +98,19 @@ classdef Constellation
 
         end
 
+        function satsPos = getSatsPosAt(obj, time)
+            sats = obj.getSatellites();
+            satsPos = [];
+
+            nSats = length(sats);
+
+            for i = 1:nSats
+                sat = sats(i);
+                satsPos = [satsPos, sat.getPositionECIAt(time)];
+            end
+
+        end
+
     end
 
     methods (Access = private)
