@@ -21,7 +21,7 @@ classdef Simulation
                 t = vecT(indexT);
                 [posEstimationHistory, biasEstimationHistory] = ...
                     obj.lsFilter.estimate(obj.constellation.getSatsPosAt(t));
-                estimatedPos = posEstimationHistory(end);
+                estimatedPos = posEstimationHistory(:, end);
                 estimatedBias = biasEstimationHistory(end);
                 posEstimations(:, indexT) = estimatedPos;
                 biasEstimations(indexT) = estimatedBias;
@@ -32,7 +32,7 @@ classdef Simulation
         function visualizeResults(obj, vecT, posEstimations, biasEstimations)
             longitude = atan2d(posEstimations(2, :), posEstimations(1, :));
             latitude = atan2d(posEstimations(3, :), vecnorm(posEstimations(1:2, :)));
-            altitude = sqrt(posEstimations(1, :) + posEstimations(2, :)) / cosd(latitude);
+            altitude = sqrt(posEstimations(1, :) .^ 2 + posEstimations(2, :) .^ 2) ./ cosd(latitude);
 
             figure;
             hold on;

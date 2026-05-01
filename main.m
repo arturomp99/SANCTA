@@ -44,7 +44,7 @@ simulation.visualizeResults(vecT, posEstimations, biasEstimations);
 % Estudiar como cambia la dop cada 20 minutos durante 12 horas
 % En cada instante estimamos la posicion durante 5 minutos con tiempos de muestreo de 10 segundos
 initialT = 0; %s
-endT = 12 * 3600; %s
+endT = 2 * 3600; %s
 deltaT = 20 * 60; %s
 estimationDuration = 1 * 60; %s
 estimationDeltaT = 1; %s

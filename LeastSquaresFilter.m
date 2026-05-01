@@ -30,8 +30,15 @@ classdef LeastSquaresFilter < handle
 
             [~, visibleSatPos] = obj.observer.getVisibleSats(satsPos);
 
+            measuredPseudodistances = ...
+                obj.findPseudodistances(visibleSatPos, ...
+                obj.observer.getPos(), ...
+                obj.observer.getBias(), ...
+                obj.signoise ...
+            );
+
             for i = 1:obj.maxIterations
-                [bias, pos] = obj.estimationStep(visibleSatPos);
+                [bias, pos] = obj.estimationStep(visibleSatPos, measuredPseudodistances);
                 obj.estimatedBias = bias;
                 obj.estimatedPos = pos;
                 posEstimationHistory(:, i) = pos;
@@ -77,8 +84,8 @@ classdef LeastSquaresFilter < handle
             observerLatitude = atan2d(observerPos(3), norm(observerPos(1:2)));
             observerRadius = norm(observerPos);
             longitudeError = longitude - observerLongitude;
-            latitudeError = longitude - observerLatitude;
-            radiusError = longitude - observerRadius;
+            latitudeError = latitude - observerLatitude;
+            radiusError = radius - observerRadius;
             biasError = biasEstimationHistory - observerBias;
 
             subplot(4, 2, 4 + 1)
@@ -109,9 +116,8 @@ classdef LeastSquaresFilter < handle
 
     methods (Access = private)
 
-        function [estimatedBias, estimatedPos] = estimationStep(obj, statsPos)
+        function [estimatedBias, estimatedPos] = estimationStep(obj, statsPos, measuredPseudodistances)
             observerBias = obj.observer.getBias();
-            measuredPseudodistances = obj.findPseudodistances(statsPos, obj.observer.getPos(), observerBias, obj.signoise);
             estimatedPseudodistances = obj.findPseudodistances(statsPos, obj.estimatedPos, obj.estimatedBias, 0);
 
             measuresResidual = measuredPseudodistances - estimatedPseudodistances;
@@ -134,7 +140,7 @@ classdef LeastSquaresFilter < handle
                 pseudoDistances = [pseudoDistances; pseudoDistance];
             end
 
-            pseudoDistances = pseudoDistances + Earth.lightSpeed * bias + signoise * randn(size(pseudoDistances, 2));
+            pseudoDistances = pseudoDistances + Earth.lightSpeed * bias + signoise * randn(size(pseudoDistances));
 
         end
 
